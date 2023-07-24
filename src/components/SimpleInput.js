@@ -5,29 +5,35 @@ const SimpleInput = (props) => {
   const [isTouched, setIsTouched] = useState(false);
 
   const enteredNameIsValid = name.trim() !== '';
-  const nameInputIsInvalid = !enteredNameIsValid && isTouched; // name input is invalid if isTouched is true and isValid is false
+  const nameInputIsInvalid = !enteredNameIsValid && isTouched; // name input is invalid if isTouched is true and name is empty
+
+  let formIsValid = false
+
+  if (enteredNameIsValid) {
+    formIsValid = true
+  }
 
   const handleFormSubmission = (event) => {
     event.preventDefault();
-    setIsTouched(true);
+    setIsTouched(true); // user has interacted with the form input
 
-    if (!enteredNameIsValid) {
+    if (!enteredNameIsValid) { // if input name is empty on submission return
       return 
     }
 
-    setName("");
-    setIsTouched(false)
+    setName(""); // reset input value on form submission
+    setIsTouched(false) // set is touched to false (fresh form after submission)
   };
 
-  const handleInput = (event) => {
+  const handleInput = (event) => { // onchange of the input set name to current input value
     setName(event.target.value);
   };
 
-  const inputBlurHandler = () => {
+  const inputBlurHandler = () => { // onblur of input set is touched to true
     setIsTouched(true) 
   };
 
-  const formControlValid = nameInputIsInvalid
+  const formControlValid = nameInputIsInvalid // if name input is empty and the form has been interacted with by user set invalid class, otherwise keep valid class
     ? "form-control invalid"
     : "form-control";
 
@@ -39,7 +45,7 @@ const SimpleInput = (props) => {
       </div>
       {nameInputIsInvalid && <p class="error-text">Name must not be empty.</p>}
       <div className="form-actions">
-        <button>Submit</button>
+        <button disabled={!formIsValid}>Submit</button>
       </div>
     </form>
   );

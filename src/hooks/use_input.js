@@ -1,11 +1,11 @@
 import { useState } from "react";
 
-const useInput = () => {
+const useInput = (validate) => {
     const [inputValue, setInputValue] = useState("");
     const [isTouched, setIsTouched] = useState(false);
 
-    const enteredInputIsValid = inputValue.trim() !== '';
-    const enteredInputIsInvalid = !enteredInputIsValid && isTouched;
+    const inputIsValid = validate(inputValue);
+    const inputIsInvalid = !inputIsValid && isTouched; // if input value is empty and input field has been touched
 
     const handleInput = (event) => { 
         setInputValue(event.target.value);
@@ -15,25 +15,18 @@ const useInput = () => {
         setIsTouched(true) 
     };
 
-    const formInputClasses = enteredInputIsValid // if name input is empty and the form has been interacted with by user set invalid class, otherwise keep valid class
-    ? "form-control invalid"
-    : "form-control";
-
-    let formIsValid = false
-
-    if (enteredInputIsValid) {
-      formIsValid = true
-    }
+    const reset = () => {
+        setInputValue("")
+        setIsTouched(false)
+    };
 
     return {
+        inputValue,
         handleInput,
         inputBlurHandler,
-        inputValue,
-        isTouched,
-        enteredInputIsInvalid,
-        enteredInputIsValid, 
-        formInputClasses,
-        formIsValid
+        inputIsValid,
+        inputIsInvalid,
+        reset
     }
 };
 
